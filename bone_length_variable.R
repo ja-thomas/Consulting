@@ -16,13 +16,13 @@ for(i in 0:24){
   
   a <- bone_data[(bone_data$joint_Nr == i),]
   
-  # x,y,z Koordinaten identifizierbar machen
+  # x,y,z Koordinaten identifizierbar für jeden Joint machen
   names(a)[names(a)=="position_x"] <- paste0("x",i)
   names(a)[names(a)=="position_y"] <- paste0("y",i)
   names(a)[names(a)=="position_z"] <- paste0("z",i)
   
    a <- a[,-2] # Variable Joint Nr entfernen 
-  # Datensätze durchnummerieren
+  # durchnummerierte Datenstäze - für jeden Joint einen - ausgeben
   assign(paste0("joint",i),a)
 }
 
@@ -73,6 +73,8 @@ ydata <- ydata2[ydata$person == "Proband 1",]
 zdata <- zdata2[zdata$person == "Proband 1",]
 
 ##### Funktion zur Berechnung der Knochenlängenvariable
+
+
 
 n <- nrow(xdata)
 

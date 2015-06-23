@@ -15,8 +15,8 @@ library(MoCap)
 
 joint_numbers # Anzeigen der Joints -> Shoulder Left = 4 und Shoulder Right = 8
 
-angle_data_4 <- work_data[(work_data$joint_Nr == 4),]
-angle_data_8 <- work_data[(work_data$joint_Nr == 8),]
+angle_data_4 <- data[(data$joint_Nr == 4),]
+angle_data_8 <- data[(data$joint_Nr == 8),]
 
 attach(angle_data_4)
 angle_data_4 <- data.frame( timestamp , sensorId, person,
@@ -48,9 +48,10 @@ diff_x <- RShoulder_position_x - LShoulder_position_x
 #z-Wert
 diff_z <- RShoulder_position_z - LShoulder_position_z
 
+detach(angle_data)
 # Abstandsvektor ist (diff_x, diff_z)
 
-##### Rotatieren um 90 Grad
+##### Rotieren um 90 Grad
 
 # rotationsmatrix erstellen
 
@@ -66,7 +67,7 @@ angle_data <- data.frame(angle_data, rot_diff_x, rot_diff_z)
 rm(diff_x)
 rm(diff_z)
 rm(rot_diff_x)
-rm(rot_diff_y)
+rm(rot_diff_z)
 
 
 ####### Blickrichtung des Sensors
@@ -117,6 +118,20 @@ rownames(rotations) <- c("501958741942",
                          "007319145247",
                          "500718743142")
 
+rm(rot_x, rot_x_501958741942,
+              rot_x_011921745247,
+              rot_x_500005441742,
+              rot_x_500860243142,
+              rot_x_007319145247,
+              rot_x_500718743142,
+              rot_z,
+              rot_z_501958741942,
+              rot_z_011921745247,
+              rot_z_500005441742,
+              rot_z_500860243142,
+              rot_z_007319145247,
+              rot_z_500718743142)
+
 
 # Variable rot_cam_x erstellen
 n <- nrow(angle_data)
@@ -157,7 +172,7 @@ for(i in 1:n){
   } 
   }
   
-}
+
 
 # Variable rot_cam_z erstellen
 n <- nrow(angle_data)
@@ -198,7 +213,7 @@ for(i in 1:n){
   } 
 }
 
-}
+
 
 
 
@@ -236,10 +251,10 @@ for(i in 1:n){
 
 ####### Datensatz mit Identifikationsvariablen und Winkelvariable als Ergebnis
 
-angle_data_red <- angle_data[,c(1,2,3,4)]
-angle_data_red <- cbind(angle_data_red,shoulder_angle)
+
+angle_data <- cbind(angle_data[,c(1,2,3,4)],shoulder_angle)
 
 
-rm(list=(ls()[ls()!= "angle_data_red"]))
+rm(norm_vec_cam_x, norm_vec_cam_z, norm_vec_user_x, norm_vec_user_z, a,v, shoulder_angle)
 
 
