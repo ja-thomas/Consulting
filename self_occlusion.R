@@ -10,7 +10,7 @@ setkey(data, joint_Nr, course, person, sensorId, timestamp)
 
 
 
-test <- laply(1:nrow(data), function(i) calculate_self_occlusion(data[i,], data = data), .progress = "tk")
+#test <- laply(1:nrow(data), function(i) calculate_self_occlusion(data[i,], data = data), .progress = "tk")
 
 
 calculate_self_occlusion <- function(reference_joint, data){
