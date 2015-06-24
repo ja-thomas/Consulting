@@ -57,8 +57,8 @@ detach(angle_data)
 
 M <- matrix(c(0,-1,1,0),2) # Rotieren durch M* (diff_x,diff_z) -> (-diff_x, diff_z)
 
-rot_diff_x <- -diff_z
-rot_diff_z <- diff_x
+rot_diff_x <- diff_z
+rot_diff_z <- -diff_x
 
 rm(M)
 ### Zusammenfügen zu angle_data
@@ -226,7 +226,7 @@ library(ppls)
 norm_vec_user_x <- NULL
 norm_vec_user_z <- NULL
 for(i in 1:n){
-  a <- normalize.vector(c(angle_data$diff_x[i],angle_data$diff_z[i]))
+  a <- normalize.vector(c(angle_data$rot_diff_x[i],angle_data$rot_diff_z[i]))
   norm_vec_user_x <- c(norm_vec_user_x,a[1])
   norm_vec_user_z <- c(norm_vec_user_z,a[2])
 }

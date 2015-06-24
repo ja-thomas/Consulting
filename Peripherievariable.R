@@ -19,19 +19,22 @@ return(azimut)
 }
 
 # Datensatz aufteilen
-azimut1 <- calc_azimut(data[person == "Proband 1",])
-azimut2 <- calc_azimut(data[person == "Proband 2",])
-azimut3 <- calc_azimut(data[person == "Proband 3",])
-azimut4 <- calc_azimut(data[person == "Proband 4",])
-azimut5 <- calc_azimut(data[person == "Proband 5",])
-
+n <- nrow(data)
+azimut1 <- calc_azimut(data[1:1000000,])
+azimut2 <- calc_azimut(data[1000001:2000000,])
+azimut3 <- calc_azimut(data[2000001:3000000,])
+azimut4 <- calc_azimut(data[3000001:4000000,])
+azimut5 <- calc_azimut(data[4000001:5000000,])
+azimut6 <- calc_azimut(data[5000001:6000000,])
+azimut7 <- calc_azimut(data[6000001:7000000,])
+azimut8 <- calc_azimut(data[7000001:n,])
 # azimut <- calc_azimut(data) # testen
 
 
 ###### zusammenbauen von azimut
-azimut <- c(azimut1, azimut2, azimut3, azimut4, azimut5)
+azimut <- c(azimut1, azimut2, azimut3, azimut4, azimut5, azimut6, azimut7, azimut8)
 
-rm(azimut1, azimut2, azimut3, azimut4, azimut5)
+rm(azimut1, azimut2, azimut3, azimut4, azimut5, azimut6,azimut7, azimut8)
 
 ############## kompletter Datensatz mit azimut
 
@@ -52,22 +55,26 @@ calc_elevation<- function(x){
   return(elevation)
 }
 
-elevation1 <- calc_elevation(data[person == "Proband 1",])
-elevation2 <- calc_elevation(data[person == "Proband 2",]) 
-elevation3 <- calc_elevation(data[person == "Proband 3",])
-elevation4 <- calc_elevation(data[person == "Proband 4",])
-elevation5 <- calc_elevation(data[person == "Proband 5",])
+n <- nrow(data)
+elevation1 <- calc_elevation(data[1:1000000,])
+elevation2 <- calc_elevation(data[1000001:2000000,])
+elevation3 <- calc_elevation(data[2000001:3000000,])
+elevation4 <- calc_elevation(data[3000001:4000000,])
+elevation5 <- calc_elevation(data[4000001:5000000,])
+elevation6 <- calc_elevation(data[5000001:6000000,])
+elevation7 <- calc_elevation(data[6000001:7000000,])
+elevation8 <- calc_elevation(data[7000001:n,])
 
 #elevation <- calc_elevation(data) # testen
 
 
 ###### zusammenbauen von elevation
-elevation <- c(elevation1, elevation2, elevation3, elevation4, elevation5)
+elevation <- c(elevation1, elevation2, elevation3, elevation4, elevation5, elevation6, elevation7, elevation8)
 
-rm(elevation1, elevation2, elevation3, elevation4, elevation5)
+rm(elevation1, elevation2, elevation3, elevation4, elevation5, elevation6, elevation7, elevation8)
 
 ############## kompletter Datensatz mit elevation
 
 data <- data.frame(data, elevation)
 
-rm(elevation)
+rm(elevation,n)
