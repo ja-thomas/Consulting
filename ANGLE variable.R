@@ -13,10 +13,14 @@ library(MoCap)
 ################################################################
 
 
+load("../Data/registered_optitrack_data.RData")
+
+
+
 joint_numbers # Anzeigen der Joints -> Shoulder Left = 4 und Shoulder Right = 8
 
-angle_data_4 <- data[(data$joint_Nr == 4),]
-angle_data_8 <- data[(data$joint_Nr == 8),]
+angle_data_4 <- registered_optitrack_data[(registered_optitrack_data$joint_Nr == 4),]
+angle_data_8 <- registered_optitrack_data[(registered_optitrack_data$joint_Nr == 8),]
 
 attach(angle_data_4)
 angle_data_4 <- data.frame( timestamp , sensorId, person,
@@ -134,6 +138,14 @@ rm(rot_x, rot_x_501958741942,
 
 
 # Variable rot_cam_x erstellen
+
+cameras <- c("501958741942", "011921745247", "500005441742", "500860243142", 
+             "007319145247", "500718743142")
+
+angle_data <- do.call(rbind, lapply(cameras, function(x) cbind(
+  angle_data[, -which(colnames(angle_data) == "sensorId")], sensorId = x)))
+
+
 n <- nrow(angle_data)
 rot_cam_x <- NULL
 for(i in 1:n){
@@ -252,8 +264,10 @@ for(i in 1:n){
 ####### Datensatz mit Identifikationsvariablen und Winkelvariable als Ergebnis
 
 
-angle_data <- cbind(angle_data[,c(1,2,3,4)],shoulder_angle)
+angle_data <- cbind(angle_data[,c(1,2,3,10)],shoulder_angle)
 
+
+save(angle_data, file = "../Data/angledata_new.Rdata")
 
 rm(norm_vec_cam_x, norm_vec_cam_z, norm_vec_user_x, norm_vec_user_z, a,v, shoulder_angle)
 

@@ -1,4 +1,9 @@
 ########## Variable für Knochenlänge
+library(MoCap)
+setwd("~/Uni/Consulting/Code/")
+load("../Data/data_processed.RData")
+
+
 
 # interessierende Variablen aus Gesamtdatensatz herauspicken
 attach(data)
@@ -49,7 +54,7 @@ zdata <- data.frame(timestamp, sensorId, person, course_Id,z0,z1,z2,z3,z4,z5,z6,
 detach(bone_data)
 
 ### kinematisches Modell geordnet nach Jointnummerierung
-Jointmatrix_sortiert <- read.csv("~/Consulting/Jointmatrix_sortiert.csv", sep=";")
+Jointmatrix_sortiert <- read.csv("~/Uni/Consulting/Code/Jointmatrix_sortiert.csv", sep=";")
 jointmat <- Jointmatrix_sortiert[,-1] #25x25
 
 #################################### Berechnen der Knochenlängenvariable
@@ -723,6 +728,7 @@ rm( bone_data)
 
 Knochenvariable <- rbind(Prob1Knochen, Prob2Knochen, Prob3Knochen, Prob4Knochen, Prob5Knochen)   # Knochenvariable plus identifikationsvariablen
 
+save(Knochenvariable, file = "../Data/Bone_error.RData")
 
 rm(Prob1Knochen, Prob2Knochen, Prob3Knochen, Prob4Knochen, Prob5Knochen, jointmat,Jointmatrix_sortiert)
 rm(a, abst, bone_error, i, j, joint_Nr, k, l,m,mat_diff,n,smallest,sorted)
