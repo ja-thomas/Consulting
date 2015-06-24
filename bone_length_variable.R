@@ -719,9 +719,9 @@ rm(Prob5Knochen_Joint0,Prob5Knochen_Joint1,Prob5Knochen_Joint2,Prob5Knochen_Join
 
 
 ###############Enddatensatz
-rm(data, bone_data)
+rm( bone_data)
 
-Knochenvariable <- rbind(Prob1Knochen, Prob2Knochen, Prob3Knochen, Prob4Knochen, Prob5Knochen)
+Knochenvariable <- rbind(Prob1Knochen, Prob2Knochen, Prob3Knochen, Prob4Knochen, Prob5Knochen)   # Knochenvariable plus identifikationsvariablen
 
 
 rm(Prob1Knochen, Prob2Knochen, Prob3Knochen, Prob4Knochen, Prob5Knochen, jointmat,Jointmatrix_sortiert)
