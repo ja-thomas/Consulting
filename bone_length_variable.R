@@ -5,7 +5,7 @@ attach(data)
 bone_data <- data.frame(timestamp, joint_Nr, sensorId, person, course_Id, position_x,
                         position_y, position_z)
 detach(data)
-rm(data)
+
 
 ##### Datensatz umstrukturieren
 
