@@ -4,11 +4,11 @@ library(plyr)
 library(foreach)
 library(doMC)
 #setwd("Uni/Consulting/Code/")
-
+print("packages loaded")
 load("../Data/data_full_ts.RData")
 source("distanceBetweenLines.R")
-data <- data[,timestamp:=as.character(timestamp)]
-setkey(data, joint_Nr, course_Id, person, sensorId, timestamp)
+#data <- data[,timestamp:=as.character(timestamp)]
+#setkey(data, joint_Nr, course_Id, person, sensorId, timestamp)
 
 calculate_self_occlusion <- function(reference_joint, data){
   joint_segment <- list(start = c(0,0,0), end = reference_joint[,c(position_x, position_y, position_z)])
@@ -72,13 +72,15 @@ create_single_bone_segment <- function(joint, end_joint, reference_joint, data){
 
 
 registerDoMC(cores = 5)
+print("cores registered")
 data_full$self_occlusion <- laply(1:nrow(data_full), 
                         function(i) calculate_self_occlusion(data_full[i,], 
                                                             data = data_full), 
                         .parallel = TRUE)
+print("running....")
 
 save(data_full, file ="../Data_full_occlusion.RData")
-
+print("done")
 
 
 
