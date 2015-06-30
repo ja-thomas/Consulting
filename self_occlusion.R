@@ -7,7 +7,7 @@ library(doMC)
 print("packages loaded")
 load("../Data/data_full_ts.RData")
 load("../Data/kinematic_model.RData")
-load("../Data(joint_numbers.RData")
+load("../Data/joint_numbers.RData")
 source("distanceBetweenLines.R")
 #data <- data[,timestamp:=as.character(timestamp)]
 #setkey(data, joint_Nr, course_Id, person, sensorId, timestamp)
