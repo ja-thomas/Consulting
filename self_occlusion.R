@@ -1,21 +1,16 @@
-library(MoCap)
+#library(MoCap)
 library(data.table)
 library(plyr)
 library(foreach)
 library(doMC)
-setwd("Uni/Consulting/Code/")
+#setwd("Uni/Consulting/Code/")
 
-load("../Data/data_processed.RData")
+load("../Data/data_full_ts.RData")
 source("distanceBetweenLines.R")
 data <- data[,timestamp:=as.character(timestamp)]
 setkey(data, joint_Nr, course_Id, person, sensorId, timestamp)
 
-
-registerDoMC(cores = 4)
-self_occlusion <- laply(1:nrow(data), function(i) calculate_self_occlusion(data[i,], data = data), .parallel = TRUE,.progress = "text")
-
-
- calculate_self_occlusion <- function(reference_joint, data){
+calculate_self_occlusion <- function(reference_joint, data){
   joint_segment <- list(start = c(0,0,0), end = reference_joint[,c(position_x, position_y, position_z)])
   
   other_segments <- create_bone_segment_list(reference_joint, data)
@@ -74,3 +69,16 @@ create_single_bone_segment <- function(joint, end_joint, reference_joint, data){
   
   list(start = start, end = end)
 }
+
+
+registerDoMC(cores = 5)
+data_full$self_occlusion <- laply(1:nrow(data_full), 
+                        function(i) calculate_self_occlusion(data_full[i,], 
+                                                            data = data_full), 
+                        .parallel = TRUE)
+
+save(data_full, file ="../Data_full_occlusion.RData")
+
+
+
+
