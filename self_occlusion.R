@@ -42,8 +42,6 @@ create_bone_segment_list <- function(reference_joint, data){
 
 }
 
-x <- create_bone_segment_list(data[1,], data)
-
 create_bone_segments <- function(index, model, reference_joint, data){
   
   connected_joints <- colnames(model)[model[index,]]
