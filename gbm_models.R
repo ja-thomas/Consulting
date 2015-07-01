@@ -13,8 +13,8 @@ gbm_models <- llply(0:24, function(j)
        position_change + acceleration + c(NA, diff(acceleration)) + 
        shoulder_angle + azimut + elevation + bone_error + forecast_x + 
        forecast_y + forecast_z, data = data_full[.(j)],
-     distribution = "gaussian",  n.trees = 10000, interaction.depth = 1,
-     cv.folds = 5), error = function(e) NA), .parallel = TRUE)
+     distribution = "gaussian",  n.trees = 5000, interaction.depth = 1,
+     cv.folds = 3), error = function(e) NA), .parallel = TRUE)
 
 
 save(gbm_models, file = "../Data/gbm_models_bigger.RData")
