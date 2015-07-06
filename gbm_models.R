@@ -1,23 +1,32 @@
 library(gbm)
 library(data.table)
 library(plyr)
-library(foreach)
-library(doMC)
+
 
 
 load("../Data/data_full_ts.RData")
 
-doMC::registerDoMC(cores = 4)
-gbm_models <- llply(0:24, function(j) 
-  tryCatch(gbm(formula = deviation ~ kinect_error + abs(camera_distance -2.5) +
-       position_change + acceleration + c(NA, diff(acceleration)) + 
-       shoulder_angle + azimut + elevation + bone_error + forecast_x + 
-       forecast_y + forecast_z, data = as.data.frame(data_full[.(j)]),
-     distribution = "gaussian",  n.trees = 2000, interaction.depth = 1,
-     cv.folds = 3, n.cores = 1), error = function(e) NA), .parallel = TRUE)
+
+for(j in 0:24){
+  print(paste("Start gbm model for joint ", j, "at:", Sys.time()))
+  gbm_model <- tryCatch(gbm(formula = deviation ~ kinect_error + 
+                              abs(camera_distance -2.5) + position_change + 
+                              acceleration + c(NA, diff(acceleration)) + 
+                              shoulder_angle + azimut + elevation + 
+                              bone_error + forecast_x + forecast_y + 
+                              forecast_z, 
+                            data = as.data.frame(data_full[.(j)]),
+                            distribution = "gaussian",  n.trees = 5000, 
+                            interaction.depth = 2, cv.folds = 5,
+                            shrinkage = 0.005), 
+                        error = function(e) NA)
+
+  save(gbm_model, file = paste0("../Data/gbm_model_joint_",j,".RData"))
+  print(paste("finished gbm model for joint ", j, "at:", Sys.time()))
+}
+  
 
 
-save(gbm_models, file = "../Data/gbm_models_bigger.RData")
 
 
 

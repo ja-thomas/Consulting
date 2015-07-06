@@ -1,9 +1,9 @@
-library(MoCap)
+#library(MoCap)
 library(data.table)
 library(plyr)
 library(foreach)
 library(doMC)
-setwd("Uni/Consulting/Code/")
+#setwd("~/Uni/Consulting/Code/")
 
 calculate_z_fraction <- function(sub, bone_frame = bones){
   
@@ -29,8 +29,15 @@ calculate_z_fraction <- function(sub, bone_frame = bones){
   bone_frame$joint_Nr <- unlist(mapply(function(x,y) 
     bone_frame[x,y], x = 1:24, y = bone_frame$joint_Nr))
   
-  merge(sub, aggregate(z_fraction ~ joint_Nr, data = bone_frame, FUN = sum), by = "joint_Nr")
+  merged_data <- merge(sub, aggregate(z_fraction ~ joint_Nr, 
+                                      data = bone_frame, FUN = sum), 
+                       all.x = TRUE, by = "joint_Nr")
+  merged_data$z_fraction[which(is.na(merged_data$z_fraction))] <- 0
+  
+  merged_data
+  
 }
+
 
 load("../Data/data_full_ts.RData")
 setkey(data_full, timestamp, course_Id, person, sensorId, joint_Nr)
