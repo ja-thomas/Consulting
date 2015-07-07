@@ -1,6 +1,5 @@
 library(data.table)
 library(plyr)
-library(dplyr)
 library(foreach)
 
 library(doMC)
@@ -20,14 +19,17 @@ data_full <- ddply(data_full, ~joint_Nr + course_Id + person + sensorId,
 data_full <- data.table(data_full)
 setkey(data_full, joint_Nr, course_Id, person, sensorId, timestamp)
 
+data_full[,ID := 1:nrow(data_full)]
+data_full[,abs_dist := abs(2.5 - camera_distance)]
 
 cross_validate_join <- function(one_joint_frame){
   
   ddply(one_joint_frame, ~course_Id + person + sensorId, 
         function(test_set){
     
-    train_set <- anti_join(data.table(one_joint_frame), 
-                           data.table(test_set))
+    train_index <- setdiff(one_joint_frame$ID, test_set$ID)      
+          
+    train_set <- one_joint_frame[one_joint_frame$ID %in% train_index, ]
     
     model <- lm(formula = deviation ~ kinect_error + 
                   abs(camera_distance -2.5) + 
