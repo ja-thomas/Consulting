@@ -35,8 +35,8 @@ cross_validate_join <- function(one_joint_frame){
 }
 
 registerDoMC(cores = 4)
-data_full_predicted <- ddply(data_full, ~joint_Nr, cross_validate_join,
-                             .parallel = TRUE)
+data_full_predicted <- ddply(data_full_predicted, ~joint_Nr, 
+                             cross_validate_join, .parallel = TRUE)
 
 
 save(data_full_predicted, file = "../Data/data_full_lm.RData")
