@@ -1,15 +1,17 @@
 library(data.table)
 library(plyr)
 library(foreach)
-
 library(doMC)
 
 
-load("../Data/data_full_lm.RData")
+load("../Data/data_complete.RData")
 
 
 
-cross_validate_join <- function(one_joint_frame){
+
+
+
+cross_validate_join <- function(one_joint_frame, ...){
   
   ddply(one_joint_frame, ~course_Id + person + sensorId, 
         function(test_set){
@@ -24,10 +26,11 @@ cross_validate_join <- function(one_joint_frame){
                         z_fraction + bone_error +
                         shoulder_angle + azimut + elevation + 
                         forecast_x + forecast_y + forecast_z, 
-                      data = train_set, family = gaussian(link = "log"))
+                      data = train_set, ...)
           
           test_set$pred_deviation_log_norm <- predict.glm(model,
-                                                          test_set)
+                                                          test_set,
+                                                          type = "response")
           
           test_set
           
@@ -36,7 +39,12 @@ cross_validate_join <- function(one_joint_frame){
 
 registerDoMC(cores = 4)
 data_full_predicted <- ddply(data_full_predicted, ~joint_Nr, 
-                             cross_validate_join, .parallel = TRUE)
+                             cross_validate_join, family = gaussian(link = "log"),
+                             .parallel = TRUE)
+
+data_full_predicted <- ddply(data_full_predicted, ~joint_Nr, 
+                             cross_validate_join, family = Gamma(link = "log"),
+                             .parallel = TRUE)
 
 
 save(data_full_predicted, file = "../Data/data_full_lm.RData")

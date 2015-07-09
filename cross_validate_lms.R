@@ -9,19 +9,6 @@ load("../Data/data_full_ts_z.RData")
 
 
 
-data_full <- ddply(data_full, ~joint_Nr + course_Id + person + sensorId,
-      function(s){
-        s <- data.table(s)
-        s <- s[order(timestamp)]
-        s[,acceleration_diff := c(NA, diff(acceleration))]
-      })
-
-data_full <- data.table(data_full)
-setkey(data_full, joint_Nr, course_Id, person, sensorId, timestamp)
-
-data_full[,ID := 1:nrow(data_full)]
-data_full[,abs_dist := abs(2.5 - camera_distance)]
-
 cross_validate_join <- function(one_joint_frame){
   
   ddply(one_joint_frame, ~course_Id + person + sensorId, 
