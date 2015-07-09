@@ -21,11 +21,11 @@ cross_validate_join_lm <- function(one_joint_frame, ...){
           train_set <- one_joint_frame[one_joint_frame$ID %in% train_index, ]
           
           model <- glm(formula = deviation ~ kinect_error + 
-                        abs(camera_distance -2.5) + 
-                        acceleration + acceleration_diff +
-                        z_fraction + bone_error +
-                        shoulder_angle + azimut + elevation + 
-                        forecast_x + forecast_y + forecast_z, 
+                         abs_dist + 
+                         acceleration + acceleration_diff + 
+                         shoulder_angle + periphery_x + periphery_y + 
+                         bone_error + forecast_x + forecast_y + 
+                         forecast_z + z_fraction, 
                       data = train_set, ...)
           
           test_set$pred_deviation_log_norm <- predict.glm(model,
@@ -47,11 +47,11 @@ cross_validate_join_gamma <- function(one_joint_frame, ...){
           train_set <- one_joint_frame[one_joint_frame$ID %in% train_index, ]
           
           model <- glm(formula = deviation ~ kinect_error + 
-                         abs(camera_distance -2.5) + 
-                         acceleration + acceleration_diff +
-                         z_fraction + bone_error +
-                         shoulder_angle + azimut + elevation + 
-                         forecast_x + forecast_y + forecast_z, 
+                         abs_dist + 
+                         acceleration + acceleration_diff + 
+                         shoulder_angle + periphery_x + periphery_y + 
+                         bone_error + forecast_x + forecast_y + 
+                         forecast_z + z_fraction, 
                        data = train_set, ...)
           
           test_set$pred_deviation_log_gamma <- predict.glm(model,
