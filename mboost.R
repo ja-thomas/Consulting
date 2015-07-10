@@ -26,7 +26,7 @@ calculate_mboost_model <- function(data_one_joint){
                            btree(z_fraction, tree_controls = ctrl), 
                          data = data_one_joint,
                          family = GammaReg(),
-                         control = boost_control(mstop = 5,
+                         control = boost_control(mstop = 5000,
                                                  nu = 0.1))
   
   
