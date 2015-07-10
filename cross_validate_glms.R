@@ -8,12 +8,9 @@ load("../Data/data_complete.RData")
 
 
 
-
-
-
 cross_validate_join_lm <- function(one_joint_frame, ...){
   
-  ddply(one_joint_frame, ~course_Id + person + sensorId, 
+  ddply(one_joint_frame, ~course_Id + person, 
         function(test_set){
           
           train_index <- setdiff(one_joint_frame$ID, test_set$ID)      
@@ -39,7 +36,7 @@ cross_validate_join_lm <- function(one_joint_frame, ...){
 
 cross_validate_join_gamma <- function(one_joint_frame, ...){
   
-  ddply(one_joint_frame, ~course_Id + person + sensorId, 
+  ddply(one_joint_frame, ~course_Id + person, 
         function(test_set){
           
           train_index <- setdiff(one_joint_frame$ID, test_set$ID)      
@@ -63,10 +60,12 @@ cross_validate_join_gamma <- function(one_joint_frame, ...){
         })
 }
 
-registerDoMC(cores = 4)
+registerDoMC(cores = 5)
 data_full_predicted <- ddply(data_full, ~joint_Nr, 
                              cross_validate_join_lm, family = gaussian(link = "log"),
                              .parallel = TRUE)
+
+save(data_full_predicted, file = "../Data/data_full_lm.RData")
 
 data_full_predicted <- ddply(data_full_predicted, ~joint_Nr, 
                              cross_validate_join_gamma, family = Gamma(link = "log"),
