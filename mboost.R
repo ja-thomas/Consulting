@@ -26,7 +26,7 @@ mboost_models <- dlply(data_full, ~joint_Nr, function(set){
            btree(z_fraction, tree_controls = ctrl), 
          data = set,
          family = GammaReg(),
-         control = boost_control(mstop = 5,
+         control = boost_control(mstop = 5000,
                                  nu = 0.1))}, 
   .parallel = TRUE)
   
