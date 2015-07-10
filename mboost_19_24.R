@@ -30,6 +30,7 @@ for(j in 19:24){
                          family = GammaReg(),
                          control = boost_control(mstop = 5000,
                                                  nu = 0.1,
+                                                 risk = "inbag",
                                                  trace = TRUE))
   
   print(mboost_model)
