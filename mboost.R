@@ -26,15 +26,22 @@ calculate_mboost_model <- function(data_one_joint){
                            btree(z_fraction, tree_controls = ctrl), 
                          data = data_one_joint,
                          family = GammaReg(),
-                         control = boost_control(mstop = 5000,
+                         control = boost_control(mstop = 10000,
                                                  nu = 0.1))
+  
+  cv <- cvrisk(mboost_model, folds = cv(model.weights(mboost_model), 
+                                                      type = "kfold",
+                                                      B = 3),
+               papply = lapply)
   
   
   list(cbind(
-    data_one_joint[,c("timestamp", "sensorId", 
+    data = data_one_joint[,c("deviation","timestamp", "sensorId", 
                              "person", "course_Id", "joint_Nr"),],
     predicted_mboost = predict(mboost_model, type = "response")),
-  variable_importance = mboost_model$xselect())
+  variable_importance = mboost_model$xselect(),
+  aic = AIC(mboost_model),
+  cv = cv)
 }
 
 
