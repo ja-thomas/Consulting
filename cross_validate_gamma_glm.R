@@ -7,6 +7,16 @@ library(doMC)
 load("../Data/data_complete.RData")
 
 
+#remove some outliers for numeric stability
+
+data_full <- data_full[deviation < quantile(deviation, 0.9999) & 
+            acceleration < quantile(acceleration, 0.999, na.rm = TRUE) &
+            acceleration_diff < quantile(acceleration_diff, 0.999, na.rm = TRUE) &
+            bone_error < quantile(bone_error, 0.9999) &
+            abs_dist < quantile(abs_dist, 0.9999), ]
+
+
+
 cross_validate_join_gamma <- function(one_joint_frame, ...){
   
   ddply(one_joint_frame, ~course_Id + person, 
