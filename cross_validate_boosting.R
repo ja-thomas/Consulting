@@ -29,24 +29,31 @@ cross_validate_join_boosting <- function(one_joint_frame){
                             btree(forecast_x, tree_controls = ctrl) + 
                             btree(forecast_y, tree_controls = ctrl) + 
                             btree(forecast_z, tree_controls = ctrl) +
-                            btree(z_fraction, tree_controls = ctrl), 
+                            btree(z_fraction/, tree_controls = ctrl), 
                           data = data_joint_0,
                           family = GammaReg(),
-                          control = boost_control(mstop = 50,
-                                                  nu = 0.1,
-                                                  risk = "inbag",
-                                                  trace = TRUE))
+                          control = boost_control(mstop = 4000,
+                                                  nu = 0.5))
           
           test_set$pred_deviation_boosting <- predict(model,
                                                       test_set,
                                                       type = "response")
           
-          test_set
+          cat(paste("joint:", unique(test_test$joint_Nr),
+                    unique(test_set$proband),
+                    unique(test_set$course_Id),
+                    "done"))
+          
+          
+          write(test_set, file = paste0("../Data/mboost/", 
+                                        unique(test_set$proband),
+                                        unique(test_set$course_Id),
+                                        ".RData"))
           
         })
 }
 
 registerDoMC(cores = 10)
-data_full_predicted <- ddply(data_full, ~joint_Nr, 
+data_full_predicted <- d_ply(data_full, ~joint_Nr, 
                              cross_validate_join_boosting,
                              .parallel = TRUE)

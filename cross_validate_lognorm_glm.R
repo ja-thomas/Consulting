@@ -62,6 +62,6 @@ for(i in 0:24){
 }
 
 
-save(data_full_predicted, file = "../Data/data_full_gamma_glm.RData")
+save(data_full_predicted, file = "../Data/data_full_lognorm_glm.RData")
 
 
