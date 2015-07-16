@@ -17,6 +17,8 @@ cross_validate_join_boosting <- function(one_joint_frame){
           
           train_set <- one_joint_frame[one_joint_frame$ID %in% train_index, ]
           
+          ctrl <- ctree_control(maxdepth = 2)
+          
           model <- mboost(deviation ~ 
                             btree(abs_dist, tree_controls = ctrl) + 
                             btree(acceleration, tree_controls = ctrl) + 
@@ -29,8 +31,8 @@ cross_validate_join_boosting <- function(one_joint_frame){
                             btree(forecast_x, tree_controls = ctrl) + 
                             btree(forecast_y, tree_controls = ctrl) + 
                             btree(forecast_z, tree_controls = ctrl) +
-                            btree(z_fraction/, tree_controls = ctrl), 
-                          data = data_joint_0,
+                            btree(z_fraction, tree_controls = ctrl), 
+                          data = train_set,
                           family = GammaReg(),
                           control = boost_control(mstop = 4000,
                                                   nu = 0.5))
