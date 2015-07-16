@@ -1,8 +1,9 @@
 library(mboost)
 library(data.table)
 library(plyr)
+library(party)
 
-setwd("Uni/Consulting/Code/")
+setwd("~/Uni/Consulting/Code/")
 load("../Data/data_complete.RData")
 
 data_full <- data_full[,c("timestamp", "sensorId","person","course_Id", 
@@ -12,11 +13,12 @@ data_full <- data_full[,c("timestamp", "sensorId","person","course_Id",
                           "forecast_z", "z_fraction", "bone_error", 
                           "acceleration_diff","abs_dist"), with=FALSE]
 
-data_full <- as.data.table(data_full)
-setkey(data_full, joint_Nr)
+#data_full <- as.data.table(data_full)
+#setkey(data_full, joint_Nr)
 
+ctrl <- ctree_control(maxdepth = 2)
 
-for(j in 3:24){
+for(j in 0:24){
   cat(paste("Start mboost model for joint", j, "at:", Sys.time(), "\n"))
   model <- mboost(deviation ~ 
                     btree(abs_dist, tree_controls = ctrl) + 
