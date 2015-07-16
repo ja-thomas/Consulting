@@ -10,7 +10,7 @@ load("../Data/data_complete.RData")
 
 cross_validate_join_boosting <- function(one_joint_frame){
   
-  ddply(one_joint_frame, ~course_Id + person, 
+  ddply(one_joint_frame, , 
         function(test_set){
           
           train_index <- setdiff(one_joint_frame$ID, test_set$ID)      

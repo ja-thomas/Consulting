@@ -11,7 +11,7 @@ calculate_mboost_model <- function(data_one_joint){
   
   ctrl <- ctree_control(maxdepth = 2)
   
-  mboost_model <- mboost(deviation ~ 
+  model <- mboost(deviation ~ 
                            btree(abs_dist, tree_controls = ctrl) + 
                            btree(acceleration, tree_controls = ctrl) + 
                            btree(kinect_error, tree_controls = ctrl) + 
@@ -26,16 +26,21 @@ calculate_mboost_model <- function(data_one_joint){
                            btree(z_fraction, tree_controls = ctrl), 
                          data = data_one_joint,
                          family = GammaReg(),
-                         control = boost_control(mstop = 4000,
-                                                 nu = 0.5))
+                         control = boost_control(mstop = 3000,
+                                                 nu = 0.1))
 
+  
+  cvm <- cvrisk(model, folds = cv(model.weights(model), 
+                                  type = "kfold", B = 3), papply = lapply)
+  
   
   
   prediction <- list(cbind(
     data = data_one_joint[,c("deviation","timestamp", "sensorId", 
                              "person", "course_Id", "joint_Nr"),],
-    predicted_mboost = predict(mboost_model, type = "response")),
-  variable_importance = mboost_model$xselect())
+    predicted_mboost = predict(model, type = "response")),
+  variable_importance = model$xselect(),
+  cv = cvm)
   
   save(prediction, file = paste0("../Data/mboost/variable_sel_joint", 
                                   unique(data_one_joint$joint_Nr)))
