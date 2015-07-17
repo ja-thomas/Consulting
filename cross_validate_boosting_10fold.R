@@ -8,14 +8,20 @@ library(party)
 
 load("../Data/data_complete.RData")
 
-cross_validate_join_boosting <- function(one_joint_frame, ntree){
+
+data_full <- ddply(data_full, ~joint_Nr, function(x) {
+  x$cv_it <- sample(c(rep(1:10, times = 34620), 1))
+  x
+}
+)
+
+cross_validate_join_boosting <- function(id, data, ntree){
   
-  ddply(one_joint_frame, ~course_Id + person, 
-        function(test_set){
+  data_set <- ddply(data, ~joint_Nr, 
+        function(d){
           
-          train_index <- setdiff(one_joint_frame$ID, test_set$ID)      
-          
-          train_set <- one_joint_frame[one_joint_frame$ID %in% train_index, ]
+          train_set <- d[d$cv_it != id, ]
+          test_set <- d[d$cv_it == id, ]
           
           ctrl <- ctree_control(maxdepth = 2)
           
@@ -40,17 +46,18 @@ cross_validate_join_boosting <- function(one_joint_frame, ntree){
           test_set$pred_deviation_boosting <- predict(model,
                                                       test_set,
                                                       type = "response")
-      
           
-          
-          write(test_set, file = paste0("../Data/mboost/", 
-                                        unique(test_set$proband),
-                                        unique(test_set$course_Id),
-                                        ".RData"))
-          
+          test_set
         })
-}
+  
+  write(data_set, file = paste0("../Data/mboost/prediction_Cv",id , 
+                                ".RData"))
+  
+  data_set
+  
+          
 
+}
 ntree <- list(1744,
               2910,
               141,
@@ -71,13 +78,15 @@ ntree <- list(1744,
               202,
               1858,
               530,
-              NA,
+              145,
               2556,
-              NA,
-              NA,
+              231,
+              342,
               291)
 
 registerDoMC(cores = 10)
-data_full_predicted <- d_ply(data_full, ~joint_Nr, 
-                             cross_validate_join_boosting, ntree = ntree,
-                             .parallel = TRUE)
+ldply(1:10, cross_validate_join_boosting, data = data_full, ntree = ntree,
+      .parallel = TRUE)
+
+write(data_set, file = "../Data/mboost/prediction_Cv_full.RData")
+
