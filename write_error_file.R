@@ -61,10 +61,21 @@ d_ply(data_full, ~person+course_Id, function(x){
   
   cat(paste0(unique(x$person), "_" , 
              unique(x$course_Id), "_",
-             "lognorm", " done\n"))
+             "gamma", " done\n"))
   
 })
 
-
+d_ply(data_full, ~person+course_Id, function(x){
+  
+  write_error_file(data = x, name = paste0(unique(x$person), "_" , 
+                                           unique(x$course_Id), "_",
+                                           "boosting"),
+                   weights = "pred_deviation_boosting")
+  
+  cat(paste0(unique(x$person), "_" , 
+             unique(x$course_Id), "_",
+             "boosting", " done\n"))
+  
+})
 
 

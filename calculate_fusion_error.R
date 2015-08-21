@@ -13,8 +13,17 @@ x <- do.call(rbind, lapply(1:36, function(p) read.csv2(paste0(paths[p,],"/Errors
 errors_none <- colMeans(x)
 
 
-data_errors <- data.frame(joint = names(errors_none), errors_none, errors_gamma)
+paths <- read.table("paths_boosting_fused.txt", sep ="\t", stringsAsFactors = FALSE) 
+
+x <- do.call(rbind, lapply(1:36, function(p) read.csv2(paste0(paths[p,],"/ErrorsPerJoint.csv"), 
+                                                       sep = "|")))[,-26]
+
+errors_boosting <- colMeans(x)
+
+
+data_errors <- data.frame(joint = names(errors_none), errors_none, errors_gamma, errors_boosting)
 
 rownames(data_errors) <- NULL
 
-data_errors$difference = data_errors$errors_gamma - data_errors$errors_none
+save(data_errors, file = "../fusion_error.RData")
+write.csv(data_errors, "../fusion_error.csv")

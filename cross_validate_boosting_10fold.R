@@ -50,7 +50,7 @@ cross_validate_join_boosting <- function(id, data, ntree){
           test_set
         })
   
-  write(data_set, file = paste0("../Data/mboost/prediction_Cv",id , 
+  save(data_set, file = paste0("../Data/mboost/prediction_Cv",id , 
                                 ".RData"))
   
   data_set
@@ -88,5 +88,5 @@ registerDoMC(cores = 10)
 ldply(1:10, cross_validate_join_boosting, data = data_full, ntree = ntree,
       .parallel = TRUE)
 
-write(data_set, file = "../Data/mboost/prediction_Cv_full.RData")
+save(data_set, file = "../Data/mboost/prediction_Cv_full.RData")
 
